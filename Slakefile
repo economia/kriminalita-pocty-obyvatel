@@ -4,16 +4,15 @@ option 'testFile' 'File in (/lib or /test) to run test on' 'FILE'
 option 'currentfile' 'Latest file that triggered the save' 'FILE'
 
 externalScripts =
-    \http://service.ihned.cz/js/modernizr/v2.6.2.svg.min.js
+    \http://service.ihned.cz/js/leaflet/v0.7.0.min.js
     \http://service.ihned.cz/js/d3/v3.3.2.min.js
-    \http://d3js.org/d3.geo.tile.v0.min.js
     \http://service.ihned.cz/js/topojson/v1.min.js
-    \http://service.ihned.cz/js/moment/v2.2.1.min.js
     \http://service.ihned.cz/js/tooltip/v1.1.2.d3.min.js
 
 
 externalStyles =
     \http://service.ihned.cz/js/tooltip/v1.1.2.css
+    \http://service.ihned.cz/js/leaflet/v0.7.0.css
     ...
 
 deferScripts = <[ base.js ]>
