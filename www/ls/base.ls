@@ -13,7 +13,7 @@ mapLayer = L.tileLayer do
         attribution: 'mapová data &copy; přispěvatelé OpenStreetMap, obrazový podkres <a target="_blank" href="http://ihned.cz">IHNED.cz</a>'
 
 mapLayer.addTo map
-fields = <[prepadeni_old prepadeni_new drogy_old drogy_new kradzeze_old kradeze_new]>
+fields = <[prepadeni_old prepadeni_new drogy_old drogy_new kradeze_old kradeze_new]>
 (err, indexy) <~ d3.csv "../data/indexy.csv", (row) ->
     for field in fields
         row[field] = parseFloat row[field]
@@ -26,31 +26,76 @@ for index in indexy
         values_assoc[field] ?= []
         values_assoc[field].push index[field]
 scales = {}
+west = 14.224
+north = 50.177
+east = 14.707
+projection = d3.geo.mercator!
+    ..scale 90 / (Math.PI * 2 * (Math.abs west - east) / 360)
+    ..center [west, north]
+    ..translate [0 0]
+
+path = d3.geo.path!
+    ..projection projection
+
 for field in fields
     max = d3.max values_assoc[field]
     scales[field] = d3.scale.linear!
         ..domain [0, max * 0.125, max * 0.25, max * 0.375, max * 0.5, max * 0.625, max * 0.75, max * 0.875, max]
         ..range <[#FFFFCC #FFEDA0 #FED976 #FEB24C #FD8D3C #FC4E2A #E31A1C #BD0026 #800026]>
+
 (err, topo)<~ d3.json "../data/rajony.topo.json"
 
-field_to_use = "prepadeni_new"
+field_to_use = "kradeze_new"
 scale = null
 geojson = topojson.feature topo, topo.objects.rajony
-layerStyler = (feature) ->
-    console.log field_to_use
+
+layerStyler = (feature, field = field_to_use) ->
     weight = 1
     value = if indexy_assoc[feature.properties.mop_id]
-        indexy_assoc[feature.properties.mop_id][field_to_use]
+        indexy_assoc[feature.properties.mop_id][field]
     else
         0
     color = \#222
-    fillColor = scales[field_to_use] value
+    fillColor = scales[field] value
     fillOpacity = 0.6
     opacity = 1
     {weight, fillColor, color, fillOpacity, opacity}
 
+d3.select \ul#selector .selectAll \li
+    .data fields
+    .enter!append \li
+        ..attr \class -> it
+        ..classed \active -> it == field_to_use
+        ..append \span
+            ..html -> switch it
+                | \prepadeni_old => "Přepadení"
+                | \prepadeni_new => "Přepadení"
+                | \drogy_old     => "Drogy"
+                | \drogy_new     => "Drogy"
+                | \kradeze_old   => "Krádeže"
+                | \kradeze_new   => "Krádeže"
+        ..on \click ->
+            d3.selectAll 'ul#selector li' .classed \active no
+            d3.select @ .classed \active yes
+            changeField it
+        ..append \svg
+            ..attr \height 100
+            ..attr \width 90
+            ..selectAll \path
+                .data geojson.features
+                .enter!append \path
+                    ..attr \d path
+                    ..attr \fill (feature, index, parentIndex) ->
+                        field = fields[parentIndex]
+                        {fillColor} = layerStyler feature, field
+                        fillColor
+                    ..attr \stroke \black
+                    ..attr \stroke-opacity 0.1
+                    ..attr \stroke-width 1
+
+
 changeField = (field) ->
-    field_to_use := "prepadeni_old"
+    field_to_use := field
     rajonyLayer.setStyle layerStyler
 
 rajonyLayer = L.geoJson do

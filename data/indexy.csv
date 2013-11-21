@@ -1,4 +1,4 @@
-OBJECTID,mop_id,nazev,lokalita,prepadeni_old,prepadeni_new,drogy_old,drogy_new,kradzeze_old,kradeze_new
+OBJECTID,mop_id,nazev,lokalita,prepadeni_old,prepadeni_new,drogy_old,drogy_new,kradeze_old,kradeze_new
 4,1114,Krakovská,dojezdní,5.049156956,3.091864037,5.479871463,3.124591499,3.643237712,3.654668544
 27,1312,Karlín,dojezdní,2.415998138,2.324031135,-0.259583845,-0.46466258,0.109616373,0.096449233
 1,1110,Bartolomějská,dojezdní,2.346810398,1.940312638,0.958922404,0.593758345,3.159535175,4.751132329
