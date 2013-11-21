@@ -60,7 +60,7 @@ rajonyLayer = L.geoJson do
             layer.on \mouseover ->
                 index = indexy_assoc[feature.properties.mop_id]
                 str = if index
-                    "<b>#{index.nazev}:</b> #{index[field_to_use].toFixed 2}"
+                    "<b>#{index.nazev}:</b> #{index[field_to_use].toFixed 2}SD"
                 else
                     "Bohužel pro tuto služebnu nemáme k dispozici data"
                 tooltip.display str
