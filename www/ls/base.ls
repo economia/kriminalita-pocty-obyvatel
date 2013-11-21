@@ -1,3 +1,4 @@
+tooltip = new Tooltip!
 map = L.map do
     *   'map'
     *   minZoom: 11,
@@ -49,4 +50,13 @@ rajonyLayer = L.geoJson do
             fillOpacity = 0.6
             opacity = 1
             {weight, fillColor, color, fillOpacity, opacity}
+        onEachFeature: (feature, layer) ->
+            layer.on \mouseover ->
+                index = indexy_assoc[feature.properties.mop_id]
+                str = if index
+                    "<b>#{index.nazev}:</b> #{index[field_to_use].toFixed 2}"
+                else
+                    "Bohužel pro tuto služebnu nemáme k dispozici data"
+                tooltip.display str
+            layer.on \mouseout -> tooltip.hide!
 rajonyLayer.addTo map
