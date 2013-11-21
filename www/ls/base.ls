@@ -36,20 +36,26 @@ for field in fields
 field_to_use = "prepadeni_new"
 scale = null
 geojson = topojson.feature topo, topo.objects.rajony
+layerStyler = (feature) ->
+    console.log field_to_use
+    weight = 1
+    value = if indexy_assoc[feature.properties.mop_id]
+        indexy_assoc[feature.properties.mop_id][field_to_use]
+    else
+        0
+    color = \#222
+    fillColor = scales[field_to_use] value
+    fillOpacity = 0.6
+    opacity = 1
+    {weight, fillColor, color, fillOpacity, opacity}
+
+changeField = (field) ->
+    field_to_use := "prepadeni_old"
+    rajonyLayer.setStyle layerStyler
 
 rajonyLayer = L.geoJson do
     *   geojson
-    *   style: (feature) ->
-            weight = 1
-            value = if indexy_assoc[feature.properties.mop_id]
-                indexy_assoc[feature.properties.mop_id][field_to_use]
-            else
-                0
-            color = \#222
-            fillColor = scales[field_to_use] value
-            fillOpacity = 0.6
-            opacity = 1
-            {weight, fillColor, color, fillOpacity, opacity}
+    *   style: layerStyler
         onEachFeature: (feature, layer) ->
             layer.on \mouseover ->
                 index = indexy_assoc[feature.properties.mop_id]
