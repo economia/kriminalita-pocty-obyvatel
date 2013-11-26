@@ -68,12 +68,12 @@ d3.select \ul#selector .selectAll \li
         ..classed \active -> it == field_to_use
         ..append \span
             ..html -> switch it
-                | \prepadeni_old => "Přepadení"
-                | \prepadeni_new => "Přepadení"
-                | \drogy_old     => "Drogy"
-                | \drogy_new     => "Drogy"
-                | \kradeze_old   => "Krádeže"
-                | \kradeze_new   => "Krádeže"
+                | \prepadeni_old => "Přepadení<br />starý index"
+                | \prepadeni_new => "Přepadení<br />nový index"
+                | \drogy_old     => "Drogy<br />starý index"
+                | \drogy_new     => "Drogy<br />nový index"
+                | \kradeze_old   => "Krádeže<br />starý index"
+                | \kradeze_new   => "Krádeže<br />nový index"
         ..on \click ->
             d3.selectAll 'ul#selector li' .classed \active no
             d3.select @ .classed \active yes
